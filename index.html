@@ -1,14 +1,20 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
-    <!-- IMPORTANT FOR MOBILE -->
+    <!-- REQUIRED FOR PROPER PHONE SCALING -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
 
         /* =========================
            BODY
@@ -17,14 +23,15 @@
         body {
             background-color: #0d0d0d;
             color: #b928d6;
+
             font-family: 'Courier New', Courier, monospace;
 
             min-height: 100vh;
+            min-height: 100dvh;
 
             margin: 0;
-            padding: 30px;
 
-            box-sizing: border-box;
+            padding: 30px;
 
             display: flex;
             flex-direction: column;
@@ -32,7 +39,9 @@
 
             position: relative;
 
-            /* Subtle CRT scanline effect */
+            overflow-x: hidden;
+
+            /* CRT scanlines */
             background-image: linear-gradient(
                 rgba(18, 16, 16, 0) 50%,
                 rgba(0, 0, 0, 0.3) 50%
@@ -47,16 +56,20 @@
         ========================= */
 
         .container {
+
+            width: 100%;
+
+            min-height: calc(100vh - 60px);
+
             display: flex;
             flex-direction: column;
+
             align-items: center;
             justify-content: center;
 
-            flex-grow: 1;
-
             margin-top: -40px;
 
-            width: 100%;
+            text-align: center;
         }
 
 
@@ -65,7 +78,11 @@
         ========================= */
 
         .ascii-cat {
+
+            font-family: 'Courier New', Courier, monospace;
+
             font-size: 1.3rem;
+
             line-height: 1.2;
 
             white-space: pre;
@@ -75,19 +92,23 @@
             text-shadow:
                 0 0 10px rgba(194, 136, 248, 0.7);
 
-            margin-bottom: 40px;
+            margin: 0 0 40px 0;
 
             font-weight: bold;
+
+            /* Prevent weird browser sizing */
+            width: max-content;
 
             max-width: 100%;
         }
 
 
         /* =========================
-           TYPEWRITER MESSAGE
+           MESSAGE
         ========================= */
 
         .message {
+
             font-size: 1.25rem;
 
             color: #c288f8;
@@ -102,10 +123,11 @@
 
 
         /* =========================
-           BLINKING CURSOR
+           CURSOR
         ========================= */
 
         .cursor {
+
             display: inline-block;
 
             width: 6px;
@@ -135,10 +157,11 @@
 
 
         /* =========================
-           PET BUTTON
+           BUTTON
         ========================= */
 
         button {
+
             margin-top: 40px;
 
             background: transparent;
@@ -162,6 +185,7 @@
 
 
         button:hover {
+
             background: #c288f8;
 
             color: #0d0d0d;
@@ -172,25 +196,30 @@
 
 
         /* =========================
-           FLOATING HEART
+           HEART
         ========================= */
 
         .heart {
-            position: absolute;
+
+            position: fixed;
 
             color: #ff4d4d;
 
             font-size: 20px;
 
-            animation: float 1s ease-out forwards;
+            animation:
+                float 1s ease-out forwards;
 
             pointer-events: none;
+
+            z-index: 999;
         }
 
 
         @keyframes float {
 
             0% {
+
                 opacity: 1;
 
                 transform:
@@ -199,6 +228,7 @@
             }
 
             100% {
+
                 opacity: 0;
 
                 transform:
@@ -210,31 +240,27 @@
 
 
         /* =========================
-           DAILY REUNION COUNTER
+           REUNION COUNTER
         ========================= */
 
         .counter {
-            position: absolute;
 
-            /* Center horizontally */
+            position: fixed;
+
             left: 50%;
 
             transform: translateX(-50%);
 
-            /* Distance from bottom */
-            bottom: 200px;
+            bottom: 30px;
 
-            /* Font size */
             font-size: 0.9rem;
 
-            /* Slightly transparent */
             opacity: 0.8;
 
             color: #c288f8;
 
             text-align: center;
 
-            /* Glow */
             text-shadow:
                 0 0 6px rgba(194, 136, 248, 0.4);
 
@@ -242,87 +268,178 @@
         }
 
 
-        /* =========================
-           MOBILE VERSION
-        ========================= */
+        /* ==================================================
+           📱 MOBILE
+        ================================================== */
 
-        @media (max-width: 600px) {
+        @media screen and (max-width: 600px) {
+
 
             body {
-                padding: 20px;
+
+                padding: 15px;
+
             }
 
 
             .container {
+
+                min-height: 100dvh;
+
                 margin-top: -20px;
+
+                padding-bottom: 80px;
+
             }
 
 
-            /* Make ASCII cat fit on phone */
+            /*
+
+                THIS IS THE IMPORTANT PART.
+
+                The cat now scales according
+                to the width of the phone.
+
+            */
+
             .ascii-cat {
-                font-size: 0.85rem;
+
+                font-size: clamp(
+                    1.1rem,
+                    5vw,
+                    1.5rem
+                );
 
                 line-height: 1.1;
 
-                margin-bottom: 30px;
+                margin-bottom: 35px;
+
+                transform: scale(1);
+
+                transform-origin: center;
+
             }
 
 
-            /* Smaller message on phone */
             .message {
-                font-size: 0.9rem;
 
-                max-width: 90vw;
+                font-size: clamp(
+                    0.85rem,
+                    4vw,
+                    1.1rem
+                );
+
+                max-width: 92vw;
+
             }
 
 
-            /* Smaller button */
             button {
+
                 margin-top: 30px;
 
-                padding: 7px 15px;
+                padding: 9px 16px;
 
-                font-size: 0.8rem;
+                font-size: 0.85rem;
+
             }
 
 
-            /* Counter on phone */
             .counter {
-                bottom: 30px;
 
-                font-size: 0.7rem;
+                bottom: 20px;
+
+                font-size: 0.75rem;
+
             }
 
         }
 
 
-        /* =========================
-           VERY SMALL PHONES
-        ========================= */
+        /* ==================================================
+           📱 SMALL PHONES
+        ================================================== */
 
-        @media (max-width: 380px) {
+        @media screen and (max-width: 400px) {
+
+
+            body {
+
+                padding: 10px;
+
+            }
+
+
+            .container {
+
+                padding-bottom: 70px;
+
+            }
+
 
             .ascii-cat {
-                font-size: 0.72rem;
+
+                font-size: 1rem;
+
+                line-height: 1.05;
+
+                margin-bottom: 30px;
+
             }
 
 
             .message {
-                font-size: 0.8rem;
+
+                font-size: 0.82rem;
+
             }
 
 
             button {
-                font-size: 0.75rem;
 
-                padding: 6px 13px;
+                font-size: 0.8rem;
+
+                padding: 8px 14px;
+
             }
 
 
             .counter {
-                font-size: 0.65rem;
 
-                bottom: 25px;
+                font-size: 0.68rem;
+
+                bottom: 15px;
+
+            }
+
+        }
+
+
+        /* ==================================================
+           📱 VERY SMALL PHONES
+        ================================================== */
+
+        @media screen and (max-width: 350px) {
+
+
+            .ascii-cat {
+
+                font-size: 0.9rem;
+
+            }
+
+
+            .message {
+
+                font-size: 0.75rem;
+
+            }
+
+
+            .counter {
+
+                font-size: 0.63rem;
+
             }
 
         }
@@ -350,7 +467,7 @@
 -(((---(((--------\</pre>
 
 
-        <!-- TYPEWRITER MESSAGE -->
+        <!-- MESSAGE -->
 
         <div class="message">
 
@@ -361,7 +478,7 @@
         </div>
 
 
-        <!-- PET HANK BUTTON -->
+        <!-- BUTTON -->
 
         <button onclick="petHank(event)">
             🐾 Pet Hank
@@ -372,7 +489,7 @@
 
 
     <!-- =========================
-         DAILY REUNION COUNTER
+         REUNION COUNTER
     ========================= -->
 
     <div class="counter">
@@ -387,7 +504,7 @@
 
 
         /* =====================================
-           TYPEWRITER EFFECT
+           TYPEWRITER
         ===================================== */
 
         const message =
@@ -400,12 +517,17 @@
 
             if (index < message.length) {
 
-                document.getElementById("typewriter").innerHTML +=
+                document.getElementById(
+                    "typewriter"
+                ).innerHTML +=
                     message.charAt(index);
 
                 index++;
 
-                setTimeout(typeWriter, 70);
+                setTimeout(
+                    typeWriter,
+                    70
+                );
 
             }
 
@@ -414,16 +536,17 @@
 
 
         /* =====================================
-           MEOW AUDIO
+           MEOW
         ===================================== */
 
-        const meow = new Audio("meow.wav");
+        const meow =
+            new Audio("meow.wav");
 
 
         function petHank(e) {
 
 
-            /* Play the meow */
+            /* Play sound */
 
             meow.currentTime = 0;
 
@@ -437,28 +560,34 @@
             });
 
 
-            /* Create floating heart */
+            /* Create heart */
 
             const heart =
                 document.createElement("div");
 
 
-            heart.className = "heart";
+            heart.className =
+                "heart";
 
-            heart.innerHTML = "❤️";
+
+            heart.innerHTML =
+                "❤️";
 
 
             heart.style.left =
                 e.clientX + "px";
 
+
             heart.style.top =
                 e.clientY + "px";
 
 
-            document.body.appendChild(heart);
+            document.body.appendChild(
+                heart
+            );
 
 
-            /* Remove heart after animation */
+            /* Remove heart */
 
             setTimeout(() => {
 
@@ -478,7 +607,6 @@
             new Date("2026-08-15");
 
 
-
         function updateCounter() {
 
 
@@ -486,24 +614,19 @@
                 new Date();
 
 
-            /* Remove time */
-
             today.setHours(
                 0, 0, 0, 0
             );
+
 
             reunionDate.setHours(
                 0, 0, 0, 0
             );
 
 
-            /* Calculate difference */
-
             const difference =
                 reunionDate - today;
 
-
-            /* Convert milliseconds to days */
 
             const days =
                 Math.ceil(
@@ -512,9 +635,9 @@
                 );
 
 
-            /* Display number */
-
-            document.getElementById("days").textContent =
+            document.getElementById(
+                "days"
+            ).textContent =
                 Math.max(days, 0);
 
         }
@@ -527,13 +650,7 @@
 
         window.onload = function () {
 
-
-            /* Start typewriter */
-
             typeWriter();
-
-
-            /* Start reunion counter */
 
             updateCounter();
 
@@ -545,4 +662,4 @@
 </body>
 
 </html>
-
+```
