@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #b928d6;
+            font-family: 'Courier New', Courier, monospace;
+            min-height: 100vh;
+            margin: 0;
+            padding: 30px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+
+            /* Subtle CRT scanline effect */
+            background-image: linear-gradient(
+                rgba(18, 16, 16, 0) 50%,
+                rgba(0, 0, 0, 0.3) 50%
+            );
+            background-size: 100% 4px;
+        }
+
+
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            margin-top: -40px;
+        }
+
+
+        /* =========================
+           ASCII CAT
+        ========================= */
+
+        .ascii-cat {
+            font-size: 1.3rem;
+            line-height: 1.2;
+            white-space: pre;
+            color: #c288f8;
+            text-shadow: 0 0 10px rgba(194, 136, 248, 0.7);
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           TYPEWRITER MESSAGE
+        ========================= */
+
+        .message {
+            font-size: 1.25rem;
+            color: #c288f8;
+            text-shadow: 0 0 8px rgba(194, 136, 248, 0.5);
+            text-align: center;
+        }
+
+
+        /* =========================
+           BLINKING CURSOR
+        ========================= */
+
+        .cursor {
+            display: inline-block;
+            width: 6px;
+            background-color: #c288f8;
+            box-shadow: 0 0 8px rgba(194, 136, 248, 0.8);
+            margin-left: 2px;
+            animation: blink 0.8s infinite;
+        }
+
+
+        @keyframes blink {
+            0%, 49% {
+                opacity: 1;
+            }
+
+            50%, 100% {
+                opacity: 0;
+            }
+        }
+
+
+        /* =========================
+           PET BUTTON
+        ========================= */
+
+        button {
+            margin-top: 40px;
+            background: transparent;
+            color: #c288f8;
+            border: 1px solid #c288f8;
+            padding: 8px 18px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+
+        button:hover {
+            background: #c288f8;
+            color: #0d0d0d;
+            box-shadow: 0 0 12px #c288f8;
+        }
+
+
+        /* =========================
+           FLOATING HEART
+        ========================= */
+
+        .heart {
+            position: absolute;
+            color: #ff4d4d;
+            font-size: 20px;
+            animation: float 1s ease-out forwards;
+            pointer-events: none;
+        }
+
+
+        @keyframes float {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-50px) scale(1.5);
+            }
+        }
+
+
+        /* =========================
+           DAILY REUNION COUNTER
+        ========================= */
+
+        .counter {
+            position: absolute;
+
+            /* Center horizontally */
+            left: 50%;
+            transform: translateX(-50%);
+
+            /* Distance from bottom */
+            bottom: 200px;
+
+            /* Font size */
+            font-size: 0.9rem;
+
+            /* Slightly transparent */
+            opacity: 0.8;
+
+            color: #c288f8;
+
+            text-align: center;
+
+            /* Makes it glow slightly */
+            text-shadow: 0 0 6px rgba(194, 136, 248, 0.4);
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================= -->
+
+    <div class="container">
+
+
+        <!-- ASCII CAT -->
+
+        <pre class="ascii-cat">
+   |\___/|  (\
+  _.| o o  |_  ))
+-(((---(((--------\</pre>
+
+
+        <!-- TYPEWRITER MESSAGE -->
+
+        <div class="message">
+            <span id="typewriter"></span><span class="cursor">&nbsp;</span>
+        </div>
+
+
+        <!-- PET HANK BUTTON -->
+
+        <button onclick="petHank(event)">
+            🐾 Pet Hank
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         DAILY REUNION COUNTER
+    ========================= -->
+
+    <div class="counter">
+        Days until reunion: <span id="days"></span>
+    </div>
+
+
+    <script>
+
+
+        /* =====================================
+           TYPEWRITER EFFECT
+        ===================================== */
+
+        const message = "don't worry, hank misses you too ";
+        let index = 0;
+
+
+        function typeWriter() {
+
+            if (index < message.length) {
+
+                document.getElementById("typewriter").innerHTML +=
+                    message.charAt(index);
+
+                index++;
+
+                setTimeout(typeWriter, 70);
+            }
+        }
+
+
+
+        /* =====================================
+           MEOW AUDIO
+        ===================================== */
+
+        const meow = new Audio("meow.wav");
+
+
+        function petHank(e) {
+
+            // Play the meow sound
+
+            meow.currentTime = 0;
+
+            meow.play().catch(error => {
+                console.log("Audio could not play:", error);
+            });
+
+
+            // Create floating heart
+
+            const heart = document.createElement("div");
+
+            heart.className = "heart";
+
+            heart.innerHTML = "❤️";
+
+            heart.style.left = e.clientX + "px";
+
+            heart.style.top = e.clientY + "px";
+
+            document.body.appendChild(heart);
+
+
+            // Remove heart after animation
+
+            setTimeout(() => {
+                heart.remove();
+            }, 1000);
+
+        }
+
+
+
+        /* =====================================
+           REUNION DATE
+        ===================================== */
+
+        // Your reunion date
+
+        const reunionDate = new Date("2026-08-15");
+
+
+
+        function updateCounter() {
+
+            const today = new Date();
+
+
+            // Remove time so we only compare dates
+
+            today.setHours(0, 0, 0, 0);
+
+            reunionDate.setHours(0, 0, 0, 0);
+
+
+            // Calculate difference
+
+            const difference = reunionDate - today;
+
+
+            // Convert milliseconds → days
+
+            const days = Math.ceil(
+                difference / (1000 * 60 * 60 * 24)
+            );
+
+
+            // Display the number
+
+            document.getElementById("days").textContent =
+                Math.max(days, 0);
+
+        }
+
+
+
+        /* =====================================
+           PAGE LOAD
+        ===================================== */
+
+        window.onload = function () {
+
+            // Start typewriter
+
+            typeWriter();
+
+
+            // Start reunion counter
+
+            updateCounter();
+
+        };
+
+    </script>
+
+
+</body>
+
+</html>
